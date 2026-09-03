@@ -8,10 +8,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchMe = useCallback(async () => {
+    const token = localStorage.getItem("invoicely_token");
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
     try {
       const { data } = await api.get("/auth/me");
       setUser(data);
     } catch {
+      localStorage.removeItem("invoicely_token");
       setUser(null);
     } finally {
       setLoading(false);
@@ -24,18 +31,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await api.post("/auth/login", { email, password });
+    localStorage.setItem("invoicely_token", data.token);
     setUser(data);
     return data;
   };
 
   const register = async (payload) => {
     const { data } = await api.post("/auth/register", payload);
+    localStorage.setItem("invoicely_token", data.token);
     setUser(data);
     return data;
   };
 
   const logout = async () => {
     await api.post("/auth/logout");
+    localStorage.removeItem("invoicely_token");
     setUser(null);
   };
 

@@ -41,6 +41,7 @@ export const register = async (req, res, next) => {
       email: user.email,
       role: user.role,
       companyName: user.companyName,
+      token,
     });
   } catch (err) {
     if (err.name === "ZodError") {
@@ -73,6 +74,7 @@ export const login = async (req, res, next) => {
       email: user.email,
       role: user.role,
       companyName: user.companyName,
+      token,
     });
   } catch (err) {
     if (err.name === "ZodError") {
