@@ -37,6 +37,7 @@ const Dashboard = () => {
     api
       .get("/dashboard/stats")
       .then(({ data }) => mounted && setStats(data))
+      .catch(() => mounted && setStats(null))
       .finally(() => mounted && setLoading(false));
     return () => {
       mounted = false;
@@ -58,6 +59,14 @@ const Dashboard = () => {
         <div className="rounded-xl border border-borderColor bg-surface p-5">
           <div className="shimmer h-64 w-full rounded-lg" />
         </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return (
+      <div className="py-16 text-center text-sm text-textSecondary">
+        Couldn't load your dashboard. Try refreshing the page.
       </div>
     );
   }
